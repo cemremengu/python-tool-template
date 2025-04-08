@@ -15,7 +15,7 @@ A flexible FastAPI application template that supports both Oracle and PostgreSQL
 ## Project Structure
 
 ```
-my_fastapi_app/
+python-tool-template/
 ├── .env                   # Environment variables (create from .env.example)
 ├── .env.example          # Example environment configuration
 ├── .gitignore            # Git ignore configuration
@@ -46,7 +46,7 @@ my_fastapi_app/
 
 ```bash
 git clone <repository-url>
-cd my_fastapi_app
+cd python-tool-template
 ```
 
 2. Create a virtual environment:
