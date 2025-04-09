@@ -1,11 +1,11 @@
-# FastAPI Multi-Database Tool Template
+# FastAPI PostgreSQL Tool Template
 
-A flexible FastAPI application template that supports both Oracle and PostgreSQL databases with raw SQL execution.
+A flexible FastAPI application template that supports PostgreSQL database with raw SQL execution.
 
 ## Features
 
 - FastAPI framework with automatic OpenAPI documentation
-- Support for both Oracle and PostgreSQL databases
+- Support for PostgreSQL database
 - Environment variable configuration
 - Raw SQL execution (no ORM abstractions)
 - Async database operations with databases module
@@ -25,10 +25,8 @@ python-tool-template/
 ├── app/
 │   ├── __init__.py
 │   ├── config.py         # Configuration management
-│   ├── db.py             # Database connection and queries
-│   └── api/
-│       ├── __init__.py
-│       └── items.py      # Example endpoint implementations
+│   ├── db.py             # Database connection
+│   └── api.py            # API endpoints with direct SQL
 └── tests/
     ├── __init__.py
     └── test_endpoints.py # API tests
@@ -38,7 +36,7 @@ python-tool-template/
 
 - Python 3.8 or higher
 - pip (Python package installer)
-- Access to an Oracle or PostgreSQL database
+- Access to a PostgreSQL database
 
 ## Installation
 
@@ -89,12 +87,11 @@ The application is configured using environment variables in the `.env` file:
 
 ```
 # Database Configuration
-DB_TYPE=oracle  # or postgresql
 DB_USER=your_username
 DB_PASSWORD=your_password
 DB_HOST=your_host
-DB_PORT=1521  # 1521 for Oracle, 5432 for PostgreSQL
-DB_NAME=your_database  # Database name for PostgreSQL or service name for Oracle
+DB_PORT=5432  # Default PostgreSQL port
+DB_NAME=your_database  # Database name for PostgreSQL
 DB_SCHEMA=your_schema
 
 # Application Settings
@@ -108,13 +105,7 @@ DEBUG=True
 Start the application with:
 
 ```bash
-python main.py
-```
-
-Or use uvicorn directly:
-
-```bash
-uvicorn main:app --reload
+fastapi dev main.py
 ```
 
 The application will be available at http://localhost:8000
@@ -128,61 +119,27 @@ Once the application is running, access the interactive API documentation:
 
 ## Adding New Endpoints
 
-To add new endpoints:
-
-1. Create a new file in the `app/api/` directory
-2. Define your endpoint functions using FastAPI's router
-3. Add your router to the main application in `main.py`
-
-Example:
+To add new endpoints, simply add them to the `app/api.py` file:
 
 ```python
-# app/api/users.py
-from fastapi import APIRouter, HTTPException
-from app.db import database, get_query
-
-router = APIRouter()
-
-@router.get("/")
+# In app/api.py
+@router.get("/users")
 async def get_users():
-    query = get_query("SELECT_USERS")
+    query = f"SELECT * FROM {settings.DB_SCHEMA}.users"
     users = await database.fetch_all(query)
     return [dict(user) for user in users]
 ```
 
-Then in `main.py`:
-
-```python
-from app.api import users
-
-# Add your new router
-app.include_router(users.router, prefix="/api/users", tags=["users"])
-```
-
 ## Working with SQL Queries
 
-Define your SQL queries in the `app/db.py` file within the `Queries` class:
+SQL queries are executed directly in the API handlers:
 
 ```python
-class Queries:
-    # Oracle specific queries
-    ORACLE = {
-        "SELECT_USERS": "SELECT * FROM {schema}.USERS",
-        # Add more queries here
-    }
-
-    # PostgreSQL specific queries
-    POSTGRESQL = {
-        "SELECT_USERS": "SELECT * FROM {schema}.users",
-        # Add more queries here
-    }
-```
-
-Then use them in your endpoints:
-
-```python
-query = get_query("SELECT_USERS")
-users = await database.fetch_all(query)
+@router.get("/users")
+async def get_users():
+    query = f"SELECT * FROM {settings.DB_SCHEMA}.users"
+    users = await database.fetch_all(query)
+    return [dict(user) for user in users]
 ```
 
 ## Testing

@@ -53,7 +53,7 @@ def test_read_main(test_app):
     """
     response = test_app.get("/")
     assert response.status_code == 200
-    assert response.json() == {"message": "Welcome to the FastAPI Oracle application"}
+    assert response.json() == {"message": "Welcome to the FastAPI PostgreSQL application"}
 
 
 def test_read_items(test_app, mock_db):
@@ -85,7 +85,7 @@ def test_read_items(test_app, mock_db):
 
     mock_db["fetch_all"].return_value = [Row(item) for item in mock_items]
 
-    response = test_app.get("/api/items/")
+    response = test_app.get("/api/items")
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert response.json()[0]["name"] == "Test Item"
@@ -132,7 +132,7 @@ def test_create_item(test_app, mock_db):
     }
 
     # Post to create the item
-    response = test_app.post("/api/items/", json=test_item)
+    response = test_app.post("/api/items", json=test_item)
     assert response.status_code == 201
     assert response.json()["id"] == 1  # The mock returns 1 as ID
     assert response.json()["name"] == "New Item"
