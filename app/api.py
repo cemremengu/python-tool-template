@@ -8,7 +8,7 @@ from app.db import database
 router = APIRouter()
 
 
-@router.get("/items")
+@router.get("/items", operation_id="get_items")
 async def read_items(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
@@ -34,7 +34,11 @@ async def read_items(
         return {"error": str(e)}
 
 
-@router.post("/items", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/items",
+    status_code=status.HTTP_201_CREATED,
+    operation_id="create_items",
+)
 async def create_item(payload: Dict[str, Any]):
     """
     Create a new item directly from JSON payload.
@@ -54,7 +58,7 @@ async def create_item(payload: Dict[str, Any]):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/items/{item_id}")
+@router.get("/items/{item_id}", operation_id="get_one_item")
 async def read_item(item_id: int):
     """
     Get an item by ID.
@@ -73,7 +77,7 @@ async def read_item(item_id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.put("/items/{item_id}")
+@router.put("/items/{item_id}", operation_id="update_items")
 async def update_item(item_id: int, payload: Dict[str, Any]):
     """
     Update an item by ID directly from JSON payload.
@@ -113,7 +117,11 @@ async def update_item(item_id: int, payload: Dict[str, Any]):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.delete("/items/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/items/{item_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    operation_id="delete_items",
+)
 async def delete_item(item_id: int):
     """
     Delete an item by ID.
@@ -134,4 +142,4 @@ async def delete_item(item_id: int):
     except HTTPException as he:
         raise he
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(status_code=500, detail=str(e))

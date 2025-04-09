@@ -8,12 +8,14 @@ load_dotenv()
 
 class Settings:
     # Application settings
-    APP_NAME: str = os.getenv("APP_NAME", "FastAPI Database App")
-    APP_VERSION: str = os.getenv("APP_VERSION", "0.1.0")
-    
+    APP_NAME: str = os.getenv("APP_NAME", "Tool App")
+    APP_VERSION: str = os.getenv("APP_VERSION", "0.0.0")
+
     # Server settings
     SERVER_URL: str = os.getenv("SERVER_URL", "http://localhost:8000")
-    SERVER_DESCRIPTION: str = os.getenv("SERVER_DESCRIPTION", "Local Development")
+    SERVER_DESCRIPTION: str = os.getenv(
+        "SERVER_DESCRIPTION", "Local Development Server"
+    )
 
     # Database settings
     DB_USER: str = os.getenv("DB_USER", "")

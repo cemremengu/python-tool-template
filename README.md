@@ -93,11 +93,6 @@ DB_HOST=your_host
 DB_PORT=5432  # Default PostgreSQL port
 DB_NAME=your_database  # Database name for PostgreSQL
 DB_SCHEMA=your_schema
-
-# Application Settings
-APP_NAME=FastAPI Database App
-APP_VERSION=0.1.0
-DEBUG=True
 ```
 
 ## Running the Application
